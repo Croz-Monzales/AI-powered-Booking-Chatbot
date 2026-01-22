@@ -1,0 +1,1 @@
+# script to setup the Db credentials and validate the setup

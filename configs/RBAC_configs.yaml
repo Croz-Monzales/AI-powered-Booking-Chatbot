@@ -1,0 +1,18 @@
+# rbac_configs.yaml
+rbac:
+  roles:
+    - name: "support_agent"
+      permissions:
+        - "tickets:read"
+        - "tickets:comment"
+      hitl_required: false # Support can act without approval for these
+      
+    - name: "manager"
+      permissions:
+        - "tickets:read"
+        - "refunds:process"
+      hitl_required: true  # Refunds always trigger a HITL check
+      
+    - name: "admin"
+      permissions: ["*"] # Full access
+      hitl_required: false

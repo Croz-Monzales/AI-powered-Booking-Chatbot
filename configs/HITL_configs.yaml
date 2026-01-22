@@ -1,0 +1,10 @@
+# hitl_configs.yaml
+hitl_settings:
+  approval_threshold: 0.85 # If LLM confidence is below this, trigger HITL
+  interception_mode: "active" # Wait for human before execution
+  review_ui: "slack" # Where the approval request is sent
+  
+  sensitive_tools:
+    - "delete_user"
+    - "process_payment"
+    - "change_security_settings"
