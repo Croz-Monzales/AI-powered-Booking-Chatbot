@@ -1,1 +1,160 @@
 # configs for the Database
+flights:
+  host: 'localhost'
+  database: 'flights'  
+  user: 'root'
+  password: 'Dharsh!n!2010'  
+  schema:
+    table_name: "flight_data"
+    description: "Historical aviation traffic data tracking departures, arrivals, and IFR (Instrument Flight Rules) movements by airport and state."
+    columns:
+      YEAR:
+        type: "integer"
+        searchable: true
+        description: "The calendar year of the flight records (e.g., 2023)"
+      
+      MONTH_NUM:
+        type: "integer"
+        min: 1
+        max: 12
+        description: "Numerical representation of the month"
+
+      MONTH_MON:
+        type: "string"
+        description: "Three-letter abbreviation of the month (e.g., 'JAN', 'FEB')"
+
+      FLT_DATE:
+        type: "datetime"
+        searchable: true
+        description: "The specific timestamp for the record entry"
+
+      APT_ICAO:
+        type: "string"
+        max_length: 4
+        searchable: true
+        description: "The 4-letter ICAO airport identifier (e.g., 'EGLL' for Heathrow)"
+
+      APT_NAME:
+        type: "string"
+        max_length: 255
+        searchable: true
+        description: "Full name of the airport"
+
+      STATE_NAME:
+        type: "string"
+        max_length: 100
+        searchable: true
+        description: "The country or state where the airport is located"
+
+      FLT_DEP_1:
+        type: "integer"
+        description: "Total number of flight departures"
+
+      FLT_ARR_1:
+        type: "integer"
+        description: "Total number of flight arrivals"
+
+      FLT_TOT_1:
+        type: "integer"
+        description: "Total sum of arrivals and departures"
+
+      FLT_DEP_IFR_2:
+        type: "integer"
+        description: "Departures strictly under Instrument Flight Rules (Commercial/Heavy traffic)"
+
+      FLT_ARR_IFR_2:
+        type: "integer"
+        description: "Arrivals strictly under Instrument Flight Rules"
+
+      FLT_TOT_IFR_2:
+        type: "integer"
+        description: "Total IFR movements"
+
+      Pivot_Label:
+        type: "string"
+        description: "Categorical label used for reporting or data grouping"
+
+  query_capabilities:
+    filterable_fields: ["YEAR", "APT_ICAO", "STATE_NAME", "MONTH_MON"]
+    aggregatable_fields: ["FLT_TOT_1", "FLT_TOT_IFR_2"]
+    logical_groups:
+      traffic_volume: ["FLT_DEP_1", "FLT_ARR_1", "FLT_TOT_1"]
+      ifr_metrics: ["FLT_DEP_IFR_2", "FLT_ARR_IFR_2", "FLT_TOT_IFR_2"]
+
+
+hotels:
+  host: 'localhost'
+  database: 'hotels'  
+  user: 'root'
+  password: 'Dharsh!n!2010'
+  schema:
+    table_name: "european_hotels"
+    description: "A comprehensive database of European hotels including pricing, ratings, and physical characteristics."
+    columns:
+      id:
+        type: "integer"
+        primary_key: true
+        description: "Unique identifier for the hotel"
+      
+      hotel_name:
+        type: "string"
+        max_length: 255
+        searchable: true
+        description: "The official name of the hotel property"
+
+      marks:
+        type: "decimal(3,1)"
+        min: 0.0
+        max: 10.0
+        description: "Average customer rating score (e.g., 8.2)"
+
+      region_city:
+        type: "string"
+        max_length: 100
+        searchable: true
+        description: "The city and specific neighborhood/district location"
+
+      performance:
+        type: "string"
+        options: ["Very Good", "Good", "Excellent", "Wonderful", "Review score"]
+        description: "Categorical rating label based on the marks"
+
+      reviews_raw:
+        type: "string"
+        description: "Unprocessed string of total review count (e.g., '7,620 reviews')"
+
+      price_raw:
+        type: "string"
+        description: "Unprocessed string showing price and currency (e.g., 'Price 574 zł')"
+
+      distance_raw:
+        type: "string"
+        description: "Distance from the city center in text format (e.g., '0.6 km from center')"
+
+      description:
+        type: "string"
+        description: "Standard room type or short property highlights"
+
+      stars:
+        type: "integer"
+        min: 1
+        max: 5
+        description: "The official hotel star rating (1-5)"
+
+      breakfast:
+        type: "string"
+        nullable: true
+        description: "Information regarding breakfast availability/type"
+
+      guest_reviews:
+        type: "string"
+        description: "Specific highlights or sub-ratings (e.g., 'Location 9.4')"
+
+    # Metadata for Agent Query Building
+  query_capabilities:
+    filterable_fields: ["hotel_name", "marks", "region_city", "stars", "performance"]
+    sortable_fields: ["marks", "stars", "id"]
+    default_limit: 5
+    max_limit: 20
+
+

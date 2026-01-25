@@ -1,0 +1,8 @@
+# llm_configs.yaml
+llm_configs:
+  type: ollama
+  base_url: "http://localhost:11434"
+  model: "llama3:8b" # General model
+  temperature: 0.2
+  timeout: 60
+
