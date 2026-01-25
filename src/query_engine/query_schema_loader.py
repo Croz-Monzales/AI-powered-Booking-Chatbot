@@ -1,24 +1,35 @@
 import os
 import sys
-
-# 1. Get the absolute path of the directory containing THIS script
-# Let's assume this script is in src/query_engine/
+# dir changing to project root
 current_dir = os.path.dirname(os.path.abspath(__file__))
-
-# 2. Find the project root (going up levels as needed)
-# If script is in Langgraph_project/src/query_engine/test.py, go up twice:
 project_root = os.path.abspath(os.path.join(current_dir, "..", ".."))
-
-# 3. Add project root to sys.path so 'from src...' always works
 if project_root not in sys.path:
     sys.path.append(project_root)
-
-# 4. Change directory to root so relative paths for files work
 os.chdir(project_root)
 print(f"📂 Execution path anchored to: {os.getcwd()}")
 
 from src.utils.all_readers import read_yaml
 
-# Now this path is relative to the PROJECT ROOT, not the script location
-db_schemas = read_yaml('configs/DB_configs.yaml')
-print(db_schemas)
+class EngineSchemaLoader:
+    def __init__(self,db_config_path):
+        self.config_path = db_config_path
+
+    def read_flights_engine_schema(self):
+        db_schemas = read_yaml(self.config_path)
+        print(db_schemas)
+        #print("flight DB schema: ",db_schemas.flights.schema)
+        #print("flights queryable params: ",db_schemas.flights.query_capabilities)
+        return ((db_schemas.flights.host,db_schemas.flights.user,db_schemas.flights.database,db_schemas.flights.password), db_schemas.flights.schema,db_schemas.flights.query_capabilities)
+        
+    def read_hotels_engine_schema(self):
+        db_schemas = read_yaml(self.config_path)
+        print(db_schemas)
+        #print("hotels DB schema: ",db_schemas.hotels.schema)
+        #print("hotels queryable params: ",db_schemas.hotels.query_capabilities)
+        return ((db_schemas.hotels.host,db_schemas.hotels.user,db_schemas.hotels.database,db_schemas.hotels.password), db_schemas.hotels.schema,db_schemas.hotels.query_capabilities)
+
+
+# usage
+if __name__ ==  "__main__":
+    schema_loader = EngineSchemaLoader(db_config_path='configs/DB_configs.yaml')
+    print(schema_loader.read_hotels_engine_schema())
