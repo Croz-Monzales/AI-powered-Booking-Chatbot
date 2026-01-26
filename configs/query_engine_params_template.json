@@ -1,0 +1,70 @@
+{
+    "flight_query_engine_params": {
+        "filters": {
+            "STATE_NAME": "Texas",
+            "YEAR": 2024,
+            "MONTH_NUM": 5,
+            "APT_ICAO": "KLAX"
+        },
+        "ranges": {
+            "FLT_TOT_1": {
+                "min": 100,
+                "max": 5000
+            },
+            "FLT_DATE": {
+                "start": "2024-01-01",
+                "end": "2024-03-01"
+            }
+        },
+        "search": {
+            "APT_NAME": "International"
+        },
+        "aggregate": {
+            "column": "FLT_TOT_1",
+            "function": "SUM",
+            "group_by": "MONTH_MON"
+        },
+        "sort_by": {
+            "columns": "FLT_TOT_1",
+            "descending": "True",
+            "limit": 10,
+            "offset": 0
+        }
+    },
+    "hotel_query_engine_params": {
+        "filters": {
+            "region_city": "Warsaw",
+            "stars": 4,
+            "performance": "Very Good",
+            "breakfast": "Included"
+        },
+        "ranges": {
+            "marks": {
+                "min": 8.0,
+                "max": 10.0
+            },
+            "stars": {
+                "min": 3,
+                "max": 5
+            }
+        },
+        "search": {
+            "hotel_name": "Hilton",
+            "description": "Standard Room",
+            "distance_raw": "center"
+        },
+        "aggregate": {
+            "column": "marks",
+            "function": "AVG",
+            "group_by": "stars"
+        },
+        "sort_by": {
+            "columns": "marks",
+            "descending": true,
+            "limit": 5,
+            "offset": 0
+        }
+    }
+}
+
+

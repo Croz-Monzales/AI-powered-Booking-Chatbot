@@ -29,29 +29,78 @@ class FlightQueryEngine(EngineSchemaLoader):
         self.password = password
         self.database = database
 
-    def query_formatter(self, params: dict):
-        """
-        Takes a dict of parameters from the Agent and returns (SQL, Params)
-        """
-        query = f"SELECT * FROM {self.table_name} WHERE 1=1"
-        query_params = []
+    def query_formatter(self, input_params: dict):
 
-        # 1. Dynamic Filtering based on filterable_fields
-        for field in self.filterable_fields:
-            if field in params and params[field] is not None:
+        params = input_params.get("flight_query_engine_params", {})
+        agg = params.get("aggregate", {})
+        sql_args = []
+
+        # 1. SELECT Clause (Dynamic Aggregation)
+        # If an aggregate function is provided, we change the SELECT behavior
+        if agg and agg.get("function") and agg.get("column"):
+            func = agg.get("function")
+            col = agg.get("column")
+            group_field = agg.get("group_by")
+            
+            if group_field:
+                query = f"SELECT {group_field}, {func}({col}) AS result FROM {self.table_name}"
+            else:
+                query = f"SELECT {func}({col}) AS result FROM {self.table_name}"
+        else:
+            query = f"SELECT * FROM {self.table_name}"
+
+        query += " WHERE 1=1"
+
+        # 2. FILTERS (Exact Matches)
+        filters = params.get("filters", {})
+        for field, value in filters.items():
+            if value is not None:
                 query += f" AND {field} = %s"
-                query_params.append(params[field])
+                sql_args.append(value)
 
-        # 2. Dynamic Sorting
-        if "sort_by" in params and params["sort_by"] in self.columns:
-            direction = "DESC" if params.get("descending") else "ASC"
-            query += f" ORDER BY {params['sort_by']} {direction}"
+        # 3. RANGES (Min/Max and Start/End)
+        ranges = params.get("ranges", {})
+        for field, bounds in ranges.items():
+            # Handle Numeric Ranges
+            if "min" in bounds:
+                query += f" AND {field} >= %s"
+                sql_args.append(bounds["min"])
+            if "max" in bounds:
+                query += f" AND {field} <= %s"
+                sql_args.append(bounds["max"])
+            # Handle Date/Time Ranges
+            if "start" in bounds:
+                query += f" AND {field} >= %s"
+                sql_args.append(bounds["start"])
+            if "end" in bounds:
+                query += f" AND {field} <= %s"
+                sql_args.append(bounds["end"])
 
-        # 3. Limit to protect Agent context window
-        limit = params.get("limit", 5)
-        query += " LIMIT %s"
-        query_params.append(limit)
-        return query, query_params
+        # 4. SEARCH (Fuzzy Text)
+        search = params.get("search", {})
+        for field, value in search.items():
+            if value:
+                query += f" AND {field} LIKE %s"
+                sql_args.append(f"%{value}%")
+
+        # 5. GROUP BY Clause
+        if agg and agg.get("group_by"):
+            query += f" GROUP BY {agg.get('group_by')}"
+
+        # 6. ORDER BY & PAGINATION
+        sort = params.get("sort_by", {})
+        sort_col = sort.get("columns")
+
+        if sort_col:
+            is_desc = str(sort.get("descending")).lower() == "true"
+            direction = "DESC" if is_desc else "ASC"
+    
+            if agg and agg.get("function") and sort_col == agg.get("column"):
+                query += f" ORDER BY result {direction}"
+            else:
+                query += f" ORDER BY {sort_col} {direction}"
+
+        return query, sql_args
 
     def query_executor(self, query, query_params):
         """Connects to DB, executes query, and returns results as a list of dicts."""
@@ -86,7 +135,40 @@ class FlightQueryEngine(EngineSchemaLoader):
 # usage
 if __name__ == "__main__":
     engine = FlightQueryEngine('configs/DB_configs.yaml')
-    sql, params = engine.query_formatter({"STATE_NAME": "Germany", "limit": 2})
+    params = {
+        "flight_query_engine_params": {
+            "filters": {
+                "STATE_NAME": "Texas",
+                "YEAR": 2024
+            },
+            "ranges": {
+                "FLT_TOT_1": {
+                    "min": 500,
+                    "max": 5000
+                },
+                "FLT_DATE": {
+                    "start": "2024-01-01",
+                    "end": "2024-03-31"
+                }
+            },
+            "search": {
+                "APT_NAME": "International"
+            },
+            "aggregate": {
+                "column": "FLT_TOT_1",
+                "function": "SUM",
+                "group_by": "MONTH_MON"
+            },
+            "sort_by": {
+                "columns": "FLT_TOT_1",
+                "descending": True,
+                "limit": 12,
+                "offset": 0
+            }
+        }
+    }
+
+    sql, params = engine.query_formatter(params)
     #print("sql: ",sql)
     #print("params: ",params)
     data = engine.query_executor(sql, params)
